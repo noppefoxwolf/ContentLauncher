@@ -19,7 +19,7 @@ extension UIButton.Configuration {
     @MainActor
     static func modernLauncher() -> UIButton.Configuration {
         var configuration: UIButton.Configuration = .glass()
-        configuration.image = UIImage(systemName: "terminal")
+        configuration.image = UIImage(systemName: "wrench.and.screwdriver")
         return configuration
     }
     #endif
@@ -38,7 +38,7 @@ extension UIButton.Configuration {
             configuration.background.shadowProperties.radius = 50
         }
         configuration.cornerStyle = .capsule
-        configuration.image = UIImage(systemName: "terminal")
+        configuration.image = UIImage(systemName: "wrench.and.screwdriver")
         return configuration
     }
 }
