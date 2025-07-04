@@ -2,6 +2,8 @@ import SwiftUI
 import UIKit
 
 public final class LauncherHostingWindow<Content: View>: UIWindow {
+    private weak var previousKeyWindow: UIWindow?
+    
     public init(
         windowScene: UIWindowScene,
         content: Content,
@@ -10,7 +12,10 @@ public final class LauncherHostingWindow<Content: View>: UIWindow {
         super.init(windowScene: windowScene)
         rootViewController = LauncherHostViewController(
             content: content,
-            buttonConfiguration: launcherButtonConfiguration
+            buttonConfiguration: launcherButtonConfiguration,
+            onDismiss: { [weak self] in
+                self?.restorePreviousKeyWindow()
+            }
         )
         isHidden = false // visibleWithoutMakeKey
     }
@@ -34,5 +39,19 @@ public final class LauncherHostingWindow<Content: View>: UIWindow {
                 return nil
             }
         }
+    }
+    
+    public override func makeKey() {
+        // Store the previous key window before becoming key
+        previousKeyWindow = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow && $0 !== self }
+        
+        super.makeKey()
+    }
+    
+    private func restorePreviousKeyWindow() {
+        previousKeyWindow?.makeKey()
     }
 }

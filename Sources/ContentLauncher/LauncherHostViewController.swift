@@ -1,16 +1,19 @@
 import UIKit
 import SwiftUI
 
-final class LauncherHostViewController<Content: View>: UIViewController {
+final class LauncherHostViewController<Content: View>: UIViewController, UIAdaptivePresentationControllerDelegate {
     let button: UIButton
     let content: Content
+    let onDismiss: (() -> Void)?
     
     init(
         content: Content,
-        buttonConfiguration: UIButton.Configuration
+        buttonConfiguration: UIButton.Configuration,
+        onDismiss: (() -> Void)? = nil
     ) {
         self.button = UIButton(configuration: buttonConfiguration)
         self.content = content
+        self.onDismiss = onDismiss
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -39,6 +42,13 @@ final class LauncherHostViewController<Content: View>: UIViewController {
         vc.sheetPresentationController?.prefersEdgeAttachedInCompactHeight = true
         vc.sheetPresentationController?.widthFollowsPreferredContentSizeWhenEdgeAttached = true
         
-        present(vc, animated: true)
+        present(vc, animated: true) { [weak self] in
+            // Set up dismiss callback when presentation is complete
+            vc.presentationController?.delegate = self
+        }
+    }
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        onDismiss?()
     }
 }
