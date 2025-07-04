@@ -35,7 +35,7 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate, ObservableObject {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         let windowScene = scene as! UIWindowScene
-        window = windowScene.keyWindow
+        window = UIWindow(windowScene: windowScene)
         launcherWindow = LauncherHostingWindow(
             windowScene: windowScene,
             content: LauncherContentView()
