@@ -37,12 +37,14 @@ final class LauncherHostViewController<Content: View>: UIViewController, UIAdapt
     
     func presentContent() {
         let vc = UIHostingController(rootView: content)
+        #if os(iOS)
         vc.sheetPresentationController?.detents = [.medium(), .large()]
         vc.sheetPresentationController?.selectedDetentIdentifier = configuration.selectedDetentIdentifier
         vc.sheetPresentationController?.prefersGrabberVisible = true
         
         vc.sheetPresentationController?.prefersEdgeAttachedInCompactHeight = true
         vc.sheetPresentationController?.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+        #endif
         
         present(vc, animated: true) { [weak self] in
             // Set up dismiss callback when presentation is complete

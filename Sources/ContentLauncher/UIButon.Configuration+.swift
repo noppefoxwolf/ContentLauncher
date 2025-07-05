@@ -33,7 +33,7 @@ extension UIButton.Configuration {
         configuration.background.strokeWidth = 1
         configuration.background.strokeOutset = 1
         configuration.background.strokeColor = .white.withAlphaComponent(0.3)
-        if #available(iOS 18.0, *) {
+        if #available(iOS 18.0, visionOS 2.0, *) {
             configuration.background.shadowProperties.opacity = 0.75
             configuration.background.shadowProperties.radius = 50
         }

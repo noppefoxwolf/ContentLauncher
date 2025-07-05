@@ -3,16 +3,13 @@ import UIKit
 
 @MainActor
 public struct LauncherHostingWindowConfiguration {
-    public let launcherButtonConfiguration: UIButton.Configuration
-    public let selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier
+    public var launcherButtonConfiguration: UIButton.Configuration = .launcher()
     
-    public init(
-        launcherButtonConfiguration: UIButton.Configuration = .launcher(),
-        selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier = .medium
-    ) {
-        self.launcherButtonConfiguration = launcherButtonConfiguration
-        self.selectedDetentIdentifier = selectedDetentIdentifier
-    }
+    #if os(iOS)
+    public var selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier = .medium
+    #endif
+    
+    public init() {}
 }
 
 public final class LauncherHostingWindow<Content: View>: UIWindow {
