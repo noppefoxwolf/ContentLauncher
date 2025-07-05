@@ -4,15 +4,17 @@ import SwiftUI
 final class LauncherHostViewController<Content: View>: UIViewController, UIAdaptivePresentationControllerDelegate {
     let button: UIButton
     let content: Content
+    let configuration: LauncherHostingWindowConfiguration
     let onDismiss: (() -> Void)?
     
     init(
         content: Content,
-        buttonConfiguration: UIButton.Configuration,
+        configuration: LauncherHostingWindowConfiguration,
         onDismiss: (() -> Void)? = nil
     ) {
-        self.button = UIButton(configuration: buttonConfiguration)
+        self.button = UIButton(configuration: configuration.launcherButtonConfiguration)
         self.content = content
+        self.configuration = configuration
         self.onDismiss = onDismiss
         super.init(nibName: nil, bundle: nil)
     }
@@ -36,7 +38,7 @@ final class LauncherHostViewController<Content: View>: UIViewController, UIAdapt
     func presentContent() {
         let vc = UIHostingController(rootView: content)
         vc.sheetPresentationController?.detents = [.medium(), .large()]
-        vc.sheetPresentationController?.selectedDetentIdentifier = .medium
+        vc.sheetPresentationController?.selectedDetentIdentifier = configuration.selectedDetentIdentifier
         vc.sheetPresentationController?.prefersGrabberVisible = true
         
         vc.sheetPresentationController?.prefersEdgeAttachedInCompactHeight = true

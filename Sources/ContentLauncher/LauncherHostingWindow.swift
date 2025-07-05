@@ -1,20 +1,34 @@
 import SwiftUI
 import UIKit
 
+@MainActor
+public struct LauncherHostingWindowConfiguration {
+    public let launcherButtonConfiguration: UIButton.Configuration
+    public let selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier
+    
+    public init(
+        launcherButtonConfiguration: UIButton.Configuration = .launcher(),
+        selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier = .medium
+    ) {
+        self.launcherButtonConfiguration = launcherButtonConfiguration
+        self.selectedDetentIdentifier = selectedDetentIdentifier
+    }
+}
+
 public final class LauncherHostingWindow<Content: View>: UIWindow {
-    private weak var previousKeyWindow: UIWindow?
+    private let keyWindowManager = KeyWindowManager()
     
     public init(
         windowScene: UIWindowScene,
         content: Content,
-        launcherButtonConfiguration: UIButton.Configuration = .launcher()
+        configuration: LauncherHostingWindowConfiguration = LauncherHostingWindowConfiguration()
     ) {
         super.init(windowScene: windowScene)
         rootViewController = LauncherHostViewController(
             content: content,
-            buttonConfiguration: launcherButtonConfiguration,
+            configuration: configuration,
             onDismiss: { [weak self] in
-                self?.restorePreviousKeyWindow()
+                self?.keyWindowManager.restorePreviousKeyWindow()
             }
         )
         isHidden = false // visibleWithoutMakeKey
@@ -42,16 +56,7 @@ public final class LauncherHostingWindow<Content: View>: UIWindow {
     }
     
     public override func makeKey() {
-        // Store the previous key window before becoming key
-        previousKeyWindow = UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap { $0.windows }
-            .first { $0.isKeyWindow && $0 !== self }
-        
+        keyWindowManager.storePreviousKeyWindow(excluding: self)
         super.makeKey()
-    }
-    
-    private func restorePreviousKeyWindow() {
-        previousKeyWindow?.makeKey()
     }
 }

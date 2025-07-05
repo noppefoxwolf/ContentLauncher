@@ -36,6 +36,7 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate, ObservableObject {
     ) {
         let windowScene = scene as! UIWindowScene
         window = UIWindow(windowScene: windowScene)
+        
         launcherWindow = LauncherHostingWindow(
             windowScene: windowScene,
             content: LauncherContentView()
