@@ -32,6 +32,19 @@ final class LauncherHostViewController<Content: View>: UIViewController, UIAdapt
             presentContent()
         }, for: .primaryActionTriggered)
         
+        button.menu = UIMenu(
+            children: [
+                UIAction(
+                    title: String(localized: "Remove Button", bundle: .main),
+                    image: UIImage(systemName: "minus.circle"),
+                    attributes: .destructive,
+                    handler: { [unowned button] _ in
+                        button.isHidden = true
+                    }
+                )
+            ]
+        )
+        
         button.addInteraction(LauncherButtonInteraction())
     }
     
