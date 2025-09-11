@@ -3,29 +3,28 @@ import UIKit
 extension UIButton.Configuration {
     @MainActor
     public static func launcher() -> UIButton.Configuration {
-        #if compiler(>=6.2)
+        #if os(visionOS)
+        .blurLauncher()
+        #elseif os(iOS)
         if #available(iOS 26.0, *) {
-            .modernLauncher()
+            .glassLauncher()
         } else {
-            .legacyLauncher()
+            .blurLauncher()
         }
-        #else
-        .legacyLauncher()
         #endif
     }
     
-    #if compiler(>=6.2)
     @available(iOS 26.0, *)
+    @available(visionOS, unavailable)
     @MainActor
-    static func modernLauncher() -> UIButton.Configuration {
+    static func glassLauncher() -> UIButton.Configuration {
         var configuration: UIButton.Configuration = .glass()
         configuration.image = UIImage(systemName: "wrench.and.screwdriver")
         return configuration
     }
-    #endif
     
     @MainActor
-    static func legacyLauncher() -> UIButton.Configuration {
+    static func blurLauncher() -> UIButton.Configuration {
         var configuration: UIButton.Configuration = .plain()
         configuration.baseForegroundColor = .label
         configuration.background.visualEffect = UIBlurEffect(style: .systemMaterial)
